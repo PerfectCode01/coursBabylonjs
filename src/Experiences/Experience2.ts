@@ -7,8 +7,10 @@ import { Engine,
          ArcRotateCamera,
          Vector3,
          StandardMaterial,
-         Texture
+         Texture,
+         SceneLoader
         } from "@babylonjs/core";
+        import "@babylonjs/loaders";
 
 export class Experience2{
     engine : Engine;
@@ -17,6 +19,8 @@ export class Experience2{
     constructor (private canvas:HTMLCanvasElement){
         this.engine = new Engine(this.canvas);
         this.scene = this.CreateScene();
+        this.createChair();
+        this.createTable();
 
         this.engine.runRenderLoop(()=>{
             this.scene.render();
@@ -101,5 +105,27 @@ export class Experience2{
         const diffuseTex = new Texture("./textures/cube/brick_diff.jpg")
         boxMaterial.diffuseTexture = diffuseTex;
         return boxMaterial;
+    }
+
+    async createChair():Promise<void>{
+         const models = await SceneLoader.ImportMeshAsync(
+            "",
+            "./models/",
+            "kiti.glb",
+            this.scene
+        )
+        const chair = models.meshes[0];
+        
+        chair.scaling = new Vector3(2,2,2)
+        chair.position.z = 1.4
+        
+        console.log(models)
+    }
+    async createTable ():Promise<void>{
+        const models = await SceneLoader.ImportMeshAsync(
+            "",
+            "./models/",
+            "mesa.glb"
+        ) 
     }
 }
